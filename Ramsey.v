@@ -77,15 +77,15 @@ Definition increasing (f : nat -> nat) :=
 Lemma compose_increasing :
  forall f g : nat -> nat,
  increasing f -> increasing g -> increasing (fun x : nat => f (g x)).
-unfold increasing in |- *; auto with v62.
+unfold increasing in |- *; auto with arith.
 Qed.
 Hint Resolve compose_increasing.
 
 Lemma increasingbystep :
  forall f : nat -> nat, (forall n : nat, f n < f (S n)) -> increasing f.
 unfold increasing in |- *; intros f i x y ltxy.
-elim ltxy; trivial with v62.
-intros; apply lt_trans with (f m); auto with v62.
+elim ltxy; trivial with arith.
+intros; apply lt_trans with (f m); auto with arith.
 Qed.
 
 (* A is Y-full : (full A Y) *)
@@ -104,7 +104,7 @@ Definition enumerate (Y : (nat -> nat) -> nat) :=
 
 Lemma increasing_enumerate :
  forall Y : (nat -> nat) -> nat, increasing (enumerate Y).
-intro; apply increasingbystep; unfold enumerate in |- *; auto with v62.
+intro; apply increasingbystep; unfold enumerate in |- *; auto with arith.
 Qed.
 
 Section dimension_one.
@@ -116,17 +116,17 @@ Definition FYA (x n : nat) := n + S (enumerate YA x).
 
 Lemma increasing_FYA : forall x : nat, increasing (FYA x).
 unfold increasing, FYA in |- *.
-intros; apply plus_lt_compat_r; trivial with v62.
+intros; apply plus_lt_compat_r; trivial with arith.
 Qed.
 Hint Resolve increasing_FYA.
 
 Lemma enumerate_YA : full A YA -> forall x : nat, A (enumerate YA x).
 intro YAfull; unfold enumerate in |- *; simple induction x.
 apply (YAfull (fun n : nat => n)).
-unfold increasing in |- *; trivial with v62.
+unfold increasing in |- *; trivial with arith.
 intros y H.
 change (A (FYA y (YA (FYA y)))) in |- *.
-apply YAfull; auto with v62.
+apply YAfull; auto with arith.
 Qed.
 
 Variable B : nat -> Prop.
@@ -143,8 +143,8 @@ Lemma pre_Ramsey1 :
  full B YB ->
  A (enumerate YA (YB (enumerate YA))) /\ B (enumerate YA (YB (enumerate YA))).
 intros YAfull YBfull; split.
-apply enumerate_YA; trivial with v62.
-apply YB_enumerate_YA; trivial with v62.
+apply enumerate_YA; trivial with arith.
+apply YB_enumerate_YA; trivial with arith.
 Qed.
 
 End dimension_one.
@@ -166,6 +166,6 @@ apply
     (fun x : nat => B (f x))
     (fun g : nat -> nat => YB (fun x : nat => f (g x)))); 
  unfold full in |- *; intros g Ig.
-apply (FAYA (fun x : nat => f (g x))); auto with v62.
-apply (FBYB (fun x : nat => f (g x))); auto with v62.
+apply (FAYA (fun x : nat => f (g x))); auto with arith.
+apply (FBYB (fun x : nat => f (g x))); auto with arith.
 Qed.
